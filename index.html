@@ -1,0 +1,981 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>All in ASUS! 自動化到智慧動化</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Noto+Sans+TC:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<template id="__bundler_thumbnail" data-bg-color="#003b46">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#05282f"></stop>
+        <stop offset="55%" stop-color="#008097"></stop>
+        <stop offset="100%" stop-color="#00cdf2"></stop>
+      </linearGradient>
+      <radialGradient id="orb" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#7aeef5" stop-opacity="0.6"></stop>
+        <stop offset="100%" stop-color="#003b46" stop-opacity="0"></stop>
+      </radialGradient>
+    </defs>
+    <rect width="1200" height="800" fill="url(#bg)"></rect>
+    <circle cx="600" cy="420" r="260" fill="url(#orb)"></circle>
+    <text x="600" y="360" text-anchor="middle" font-family="Inter,sans-serif" font-size="64" font-weight="800" fill="#fff">All in</text>
+    <text x="600" y="440" text-anchor="middle" font-family="Inter,sans-serif" font-size="96" font-weight="800" fill="#0df2ff">ASUS</text>
+    <text x="600" y="510" text-anchor="middle" font-family="sans-serif" font-size="34" font-weight="600" fill="#fff">全方位 AI 智慧轉型</text>
+  </svg>
+</template>
+<style>
+  /* ── 動畫 keyframes ── */
+  @keyframes pillFloat{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.025)} }
+  @keyframes marquee-ltr{ from{transform:translateX(-50%)} to{transform:translateX(0)} }
+  @keyframes marquee-rtl{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  @keyframes floatY{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-18px)}
+  }
+  @keyframes pulseGlow{
+    0%,100%{box-shadow:0 0 6px #0df2ff;opacity:1}
+    50%{box-shadow:0 0 16px #0df2ff,0 0 28px rgba(13,242,255,0.4);opacity:0.7}
+  }
+  @keyframes fadeInUp{
+    from{opacity:0;transform:translateY(36px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  @keyframes fadeInLeft{
+    from{opacity:0;transform:translateX(-28px)}
+    to{opacity:1;transform:translateX(0)}
+  }
+  @keyframes shimmer{
+    0%{background-position:-200% 0}
+    100%{background-position:200% 0}
+  }
+  /* scroll 淡入 class（由 JS 控制） */
+  .anim-ready{opacity:0;transform:translateY(36px);transition:opacity 0.7s ease,transform 0.7s ease}
+  .anim-ready.visible{opacity:1;transform:translateY(0)}
+  .anim-ready.delay-1{transition-delay:0.1s}
+  .anim-ready.delay-2{transition-delay:0.2s}
+  .anim-ready.delay-3{transition-delay:0.3s}
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#000;font-family:"Inter","Noto Sans TC",system-ui,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+  img{display:block;max-width:100%}
+
+  .page{
+    position:relative;
+    width:100%;
+    background:#fff;
+  }
+
+  /* ───── HERO (hero bg 0–784) ───── */
+  .hero{
+    position:relative;
+    width:100%;
+    height:auto;
+    min-height:720px;
+    overflow:hidden;
+    background:#000;
+    padding-bottom:40px;
+  }
+  .hero-bg{
+    position:absolute;
+    left:0;top:0;
+    width:100%;height:100%;
+    background:url(assets/hero-bg.jpg) center / cover no-repeat;
+  }
+  .hero-inner{
+    position:relative;z-index:2;
+    text-align:center;
+    padding-top:92px;
+  }
+  .hero-kicker{
+    font-family:"Noto Sans TC",sans-serif;
+    font-size:24px;font-weight:500;
+    color:#fff;letter-spacing:0.02em;
+    text-shadow:0 2px 6px rgba(0,0,0,0.4);
+  }
+  .hero-title{
+    font-family:"Noto Sans TC",sans-serif;
+    font-weight:800;
+    font-size:56px;
+    line-height:1.1;
+    color:#fff;
+    margin-top:18px;
+    letter-spacing:0.01em;
+    text-shadow:0 2px 10px rgba(0,0,0,0.55);
+  }
+  .hero-title .allin{
+    color:#fff;
+  }
+  .hero-title .allin .ai-hi{
+    color:#33ddff;
+  }
+  .btn-cta{
+    position:relative;
+    display:inline-flex;align-items:center;gap:14px;
+    margin-top:36px;
+    width:395px;height:82px;
+    padding:0 22px;
+    border-radius:68px;
+    /* 雙色寬漸層 + 位移動畫實現平滑過渡 */
+    background:linear-gradient(90deg,#21ddff 0%,#02b0ff 20%,#37efff 35%,#a855f7 60%,#6366f1 80%,#3b82f6 100%);
+    background-size:280% 100%;
+    background-position:0% 50%;
+    box-shadow:2px 4px 6.7px rgba(0,0,0,0.25);
+    text-decoration:none;
+    border:none;cursor:pointer;
+    transition:background-position 0.55s ease, transform 0.28s ease, box-shadow 0.28s ease;
+  }
+  .btn-cta:hover{
+    background-position:100% 50%;
+    transform:scale(1.04);
+    box-shadow:0 8px 28px rgba(99,102,241,0.5);
+  }
+  .btn-cta:hover .play{background:rgba(255,255,255,0.92)}
+  .btn-cta::before{
+    content:"";position:absolute;left:5px;top:4px;right:5px;bottom:4px;
+    border:1px solid rgba(255,255,255,0.54);
+    border-radius:37px;
+    pointer-events:none;
+  }
+  .btn-cta .play{
+    width:48px;height:48px;border-radius:50%;
+    background:#fff;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .btn-cta .play svg{width:16px;height:16px}
+  .btn-cta .ctx{
+    font-family:"Noto Sans TC",sans-serif;
+    font-weight:700;font-size:34px;color:#fff;
+    text-shadow:0 4px 4.7px rgba(0,0,0,0.25);
+    line-height:1;
+  }
+  .hero-subrow{
+    display:flex;gap:20px;justify-content:center;align-items:center;
+    margin-top:32px;
+    font-family:"Noto Sans TC",sans-serif;
+    font-size:22px;font-weight:600;color:#fff;
+    letter-spacing:0.02em;
+    text-shadow:0 2px 6px rgba(0,0,0,0.5);
+  }
+  .hero-subrow b{font-weight:800}
+  .hero-subtitle-row{
+    margin-top:42px;
+    text-align:center;
+    position:relative;z-index:2;
+  }
+  .hero-subtitle-row .s1{
+    font-family:"Noto Sans TC",sans-serif;
+    font-size:20px;font-weight:500;color:#fff;
+    letter-spacing:0.1em;
+    text-shadow:0 2px 8px rgba(0,0,0,0.4);
+  }
+  .hero-subtitle-row .s2{
+    margin-top:10px;
+    font-family:"Noto Sans TC",sans-serif;
+    font-size:44px;font-weight:700;color:#fff;
+    letter-spacing:0.04em;
+    text-shadow:0 3px 10px rgba(0,0,0,0.5);
+  }
+  .hero-subtitle-row .s2 .divider{display:inline-block;margin:0 12px;color:#9ce8f0;font-weight:300}
+
+  /* ── Hero 載入動畫 ── */
+  .hero-kicker       { animation:fadeInUp 0.7s ease 0.1s  both }
+  .hero-title        { animation:fadeInUp 0.7s ease 0.3s  both }
+  .btn-cta           { animation:fadeInUp 0.7s ease 0.55s both }
+  .hero-subtitle-row { animation:fadeInUp 0.7s ease 0.8s  both }
+
+  .pill-wrap{
+    margin:28px auto 0;
+    position:relative;z-index:2;
+    width:100%;max-width:940px;
+    animation:fadeInUp 0.7s ease 1.05s both, pillFloat 4s ease-in-out 1.8s infinite;
+  }
+
+  /* 斜切膠囊容器 */
+  .pill-bar{
+    margin:0;
+    position:relative;z-index:2;
+    display:flex;
+    width:100%;
+    height:92px;
+    border-radius:999px;
+    overflow:hidden;
+    box-shadow:none;
+  }
+  .pill-half{
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    gap:6px;
+    font-family:"Noto Sans TC",sans-serif;
+    color:#fff;
+  }
+  /* 左半：亮青，右側斜切；z-index 低於右半，讓右半壓在上層 */
+  .pill-half:first-child{
+    flex:0 0 calc(50% + 15px);
+    background:#00e1ff6b;
+    clip-path:polygon(0 0,calc(100% - 36px) 0,100% 50%,calc(100% - 36px) 100%,0 100%);
+    padding:0 20px 0 60px;
+    position:relative;z-index:1;
+  }
+  /* 右半：深海藍，左側斜切，負 margin 壓在左半上層 */
+  .pill-half:last-child{
+    flex:1;
+    margin-left:-36px;
+    background:#005f7e;
+    clip-path:polygon(36px 0,100% 0,100% 100%,36px 100%,0 50%);
+    padding:0 60px 0 20px;
+    position:relative;z-index:2;
+  }
+  .pill-half .t1{
+    font-size:18px;font-weight:400;letter-spacing:0.04em;
+    opacity:0.92;
+  }
+  .pill-half .hl{color:#f5dc82;font-weight:800;font-size:22px;margin:0 3px}
+  .pill-half .hl-num{color:#f5dc82;font-weight:800;font-family:"Inter",sans-serif;font-size:26px;margin:0 2px}
+  .pill-half .t2{
+    font-size:20px;font-weight:700;letter-spacing:0.04em;
+  }
+
+  /* ───── GRADIENT BACKGROUND for rest ───── */
+  .grad{
+    position:relative;
+    width:100%;
+    background:linear-gradient(180deg,#05282f 0%,#003b46 32%,#008097 56%,#00cdf2 100%);
+    padding-top:38px;
+    overflow:hidden;
+  }
+  .grad::before{
+    /* top black fade into gradient */
+    content:"";position:absolute;left:0;top:0;
+    width:100%;height:528px;
+    background:linear-gradient(180deg,#000 0%,rgba(0,0,0,0) 100%);
+    pointer-events:none;
+  }
+
+  /* ───── SECTION 1: PAIN POINTS ───── */
+  .pain-wrap{position:relative;padding:0 32px;z-index:3;max-width:1200px;margin:0 auto}
+  .pain-title-bg{
+    position:absolute;left:0;top:0;
+    width:1111px;height:231px;
+    background:url(assets/pain-title-bg.png) left top / contain no-repeat;
+    opacity:0.9;
+    pointer-events:none;
+  }
+  .pain-heading{
+    position:relative;
+    padding-top:130px;
+    font-family:"Noto Sans TC",sans-serif;
+    font-weight:700;font-size:40px;color:#fff;
+    letter-spacing:0.02em;
+    visibility:hidden;
+  }
+
+  .pain-subtitle{
+    position:relative;
+    display:inline-flex;align-items:center;gap:12px;
+    margin-top:36px;
+    font-family:"Noto Sans TC",sans-serif;
+    font-size:20px;font-weight:700;
+    color:#0df2ff;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+  }
+  .pain-subtitle::before{
+    content:"";
+    display:inline-block;
+    width:3px;height:18px;
+    background:linear-gradient(180deg,#0df2ff,#33ddff88);
+    border-radius:2px;
+    flex-shrink:0;
+  }
+  .pain-subtitle::after{
+    content:"";
+    position:absolute;left:0;bottom:-8px;
+    width:100%;height:1px;
+    background:linear-gradient(90deg,#0df2ff 0%,rgba(13,242,255,0.15) 100%);
+  }
+
+  /* 3 industry cards */
+  .inds{
+    position:relative;
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:22px;
+    margin-top:40px;
+  }
+  .ind-wrap{
+    display:flex;flex-direction:column;
+  }
+  .ind{
+    flex:1;
+    background:#fff;
+    border-radius:8px;
+    padding:22px 22px 18px;
+    position:relative;
+    color:#000;
+    overflow:hidden;
+    display:flex;flex-direction:column;
+  }
+  /* 大圖示裝飾：右上角、放大、半透明、overflow裁去一半 */
+  .ind-head .ico{
+    position:absolute;
+    top:-28px;right:-28px;
+    width:145px;height:145px;
+    object-fit:contain;
+    opacity:0.12;
+    pointer-events:none;
+  }
+  .ind-head{margin-bottom:14px;position:relative}
+  .ind-head .t{
+    font-family:"Noto Sans TC",sans-serif;
+    font-weight:800;font-size:30px;
+    letter-spacing:0.04em;line-height:1.15;
+    color:#1a1a1a;
+    transition:color 0.45s ease;
+  }
+  .ind-wrap:hover .ind-head .t{color:#25979c}
+  .ind-body{display:flex;flex-direction:column;gap:12px;margin-top:0;flex:1}
+  .ind-diagram{
+    width:100%;
+    aspect-ratio:4/3;
+    border-radius:6px;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(13,193,221,0.10), transparent 60%),
+      #0f2a31;
+    position:relative;
+    overflow:hidden;
+    flex-shrink:0;
+  }
+  .ind-diagram svg{width:100%;height:100%;display:block}
+  .ind-points{
+    display:flex;flex-direction:column;gap:5px;
+    font-family:"Noto Sans TC",sans-serif;
+    font-size:12px;line-height:1.45;color:#1a1a1a;font-weight:600;
+  }
+  .ind-points span{white-space:pre-line}
+
+  /* pill action — 實心青藍底色膠囊，等寬卡片，hover 左至右填滿 */
+  .ind-cta{
+    margin-top:12px;
+    padding:11px 18px 11px 12px;
+    display:flex;align-items:center;gap:10px;
+    width:100%;
+    position:relative;
+    overflow:hidden;
+    cursor:pointer;
+    border-radius:50px;
+    background:rgba(0,185,215,0.42);
+    border:none;
+    outline:none;
+    box-shadow:none;
+    backdrop-filter:blur(4px);
+    box-sizing:border-box;
+  }
+  .ind-cta::before{
+    content:"";
+    position:absolute;inset:0;
+    background:linear-gradient(to right,rgb(178,247,253),rgb(205,244,253));
+    border-radius:inherit;
+    transform:scaleX(0);
+    transform-origin:left;
+    transition:transform 0.6s cubic-bezier(0.4,0,0.2,1);
+    z-index:0;
+  }
+  .ind-wrap:hover .ind-cta::before{transform:scaleX(1)}
+  .ind-wrap:hover .ind-cta .lbl{color:#0a5a6e}
+  .ind-wrap:hover .ind-cta .round{background:#0ab8cc}
+  .ind-cta .round{
+    width:34px;height:34px;border-radius:50%;
+    background:linear-gradient(180deg,#99f8ff 0%,#c4f4ff 100%);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    position:relative;z-index:1;
+    transition:background 0.6s cubic-bezier(0.4,0,0.2,1);
+  }
+  .ind-cta .round svg{width:14px;height:14px}
+  .ind-cta .lbl{
+    font-family:"Noto Sans TC",sans-serif;
+    font-weight:700;font-size:15px;color:#fff;
+    letter-spacing:0.02em;
+    position:relative;z-index:1;
+    transition:color 0.6s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* 兩區塊間分隔 */
+  .section-sep{
+    max-width:1200px;margin:60px auto 0;
+    height:1px;
+    background:linear-gradient(90deg,transparent 0%,rgba(0,205,242,0.5) 20%,rgba(0,205,242,0.8) 50%,rgba(0,205,242,0.5) 80%,transparent 100%);
+    position:relative;z-index:3;
+  }
+  .section-sep::after{
+    content:"";position:absolute;left:50%;top:-3px;transform:translateX(-50%);
+    width:8px;height:8px;border-radius:50%;
+    background:#0df2ff;
+    animation:pulseGlow 2.2s ease-in-out infinite;
+  }
+
+  /* ───── SECTION 2: ORB / EXCLUSIVE ───── */
+  .ellipse-bg{
+    position:absolute;
+    left:-371px;top:-100px;
+    width:1932px;height:1455px;
+    border-radius:50%;
+    background:
+      linear-gradient(rgba(0,40,50,0.55),rgba(0,40,50,0.55)) padding-box,
+      linear-gradient(160deg,#33ddff 0%,#0df2ff 35%,#008097 70%,#005f72 100%) border-box;
+    border:2px solid transparent;
+    z-index:0;
+    pointer-events:none;
+  }
+  .orb-sec{
+    position:relative;
+    margin-top:200px;
+    min-height:1320px;
+    padding:0 32px 60px;
+    z-index:2;
+    max-width:1200px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .orb-crown{display:none}
+  .exclusive{
+    position:relative;z-index:3;
+    margin-top:120px;margin-left:100px;
+    font-family:"Noto Sans TC",sans-serif;font-weight:700;font-size:64px;color:#fff;
+    line-height:1;letter-spacing:0.02em;
+  }
+  .allin-big{
+    margin-left:100px;margin-top:18px;
+    position:relative;z-index:3;
+    font-family:"Noto Sans TC",sans-serif;font-weight:500;
+    font-size:77.75px;color:#fff;line-height:1;letter-spacing:0.01em;
+  }
+  .allin-big.allin-grad,
+  .allin-big .a{
+    font-family:"Inter",sans-serif;font-weight:700;
+    background:linear-gradient(90deg,#33ddff 0%,#b6f5e2 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .orb{
+    position:absolute;
+    left:-214px;top:200px;
+    width:1618px;height:1117px;
+    background:url(assets/sphere-bg.png) center / contain no-repeat;
+    z-index:1;
+    pointer-events:none;
+    animation:floatY 7s ease-in-out infinite;
+  }
+  .orb-mask-label{
+    position:absolute;left:50%;top:calc(200px + 520px);transform:translateX(-50%);
+    z-index:4;
+    font-family:"Noto Sans TC",sans-serif;
+    font-weight:700;font-size:40px;color:#fff;
+    letter-spacing:0.08em;
+    text-shadow:0 2px 12px rgba(0,0,0,0.5);
+  }
+
+  /* Feature photos ring — simple grid floating over orb */
+  .orb-features{
+    position:relative;z-index:3;
+    margin-top:60px;
+    display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
+    padding:0 40px;
+  }
+  .of{
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.25);
+    border-radius:10px;
+    padding:14px 16px;
+    backdrop-filter:blur(4px);
+    font-family:"Noto Sans TC",sans-serif;
+    color:#fff;
+  }
+  .of .n{
+    font-family:"Inter",monospace;
+    font-size:11px;color:#0df2ff;letter-spacing:0.2em;font-weight:700;
+    display:block;margin-bottom:6px;
+  }
+  .of h4{font-size:15px;font-weight:700;line-height:1.3;margin-bottom:6px}
+  .of p{font-size:12px;line-height:1.5;color:rgba(255,255,255,0.85);font-weight:400}
+
+  /* ───── SECTION 3: CASES ───── */
+  .cases{
+    position:relative;z-index:3;
+    padding:40px 32px 120px;
+    max-width:1200px;
+    margin:0 auto;
+  }
+  .cases-crown{
+    width:150px;height:129px;
+    background:url(assets/cases-crown.png) center / contain no-repeat;
+    margin:0 auto 14px;
+  }
+  .cases-title{
+    text-align:center;
+    font-family:"Noto Sans TC",sans-serif;
+    font-weight:700;font-size:64px;color:#fff;
+    letter-spacing:0.03em;
+    margin-bottom:50px;
+  }
+  /* ── 8 案例：4 欄 × 2 列，原版橫向卡片樣式 ── */
+  /* ── 跑馬燈 tracks ── */
+  .case-track{
+    overflow:hidden;
+    padding:10px 0 14px;
+    -webkit-mask-image:linear-gradient(to right,transparent,#000 60px,#000 calc(100% - 60px),transparent);
+    mask-image:linear-gradient(to right,transparent,#000 60px,#000 calc(100% - 60px),transparent);
+  }
+  .case-track+.case-track{margin-top:16px}
+  .case-list{
+    display:flex;
+    gap:18px;
+    width:max-content;
+    will-change:transform;
+  }
+  .track-ltr .case-list{ animation:marquee-ltr 40s linear infinite }
+  .track-rtl .case-list{ animation:marquee-rtl 50s linear infinite }
+  /* hover 任一排 → 兩排都暫停 */
+  .case-tracks:hover .case-list{ animation-play-state:paused }
+  /* hover 時 dim 其他卡片、放大被 hover 的 */
+  .case-tracks:hover .case{
+    opacity:0.5;filter:brightness(0.65);
+    transform:scale(0.97);
+  }
+  .case-tracks:hover .case:hover{
+    opacity:1;filter:brightness(1);
+    transform:scale(1.07) translateY(-5px);
+    box-shadow:0 16px 40px rgba(13,193,221,0.45);
+    z-index:2;
+  }
+  .case{
+    position:relative;
+    width:340px;
+    flex-shrink:0;
+    background:linear-gradient(135deg,#060707 0%,#0dc1dd 100%);
+    border-radius:8px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:row;
+    cursor:pointer;
+    transition:transform 0.35s ease, box-shadow 0.35s ease, opacity 0.35s ease, filter 0.35s ease;
+  }
+  .case .pic{
+    width:42%;
+    min-height:210px;
+    flex-shrink:0;
+    background-size:cover;background-position:center;
+    transition:transform 0.4s ease;
+  }
+  .case:hover .pic{transform:scale(1.06)}
+  .case .body{
+    flex:1;
+    padding:16px 14px 14px;
+    display:flex;flex-direction:column;justify-content:space-between;
+    background:transparent;
+  }
+  .case::after{
+    content:"";
+    position:absolute;inset:0;
+    background:linear-gradient(135deg,rgba(13,193,221,0.08) 0%,rgba(13,193,221,0.18) 100%);
+    opacity:0;
+    transition:opacity 0.3s ease;
+    pointer-events:none;
+  }
+  .case:hover::after{opacity:1}
+  .case .ctitle{
+    font-family:"Noto Sans TC",sans-serif;
+    font-size:16px;font-weight:700;color:#fff;
+    letter-spacing:0.04em;
+    margin-bottom:5px;
+  }
+  .case .cat{
+    font-family:"Noto Sans TC",sans-serif;
+    font-size:12px;font-weight:400;color:rgba(255,255,255,0.85);
+    line-height:1.5;
+    letter-spacing:0.01em;
+  }
+  .case .more{
+    display:flex;align-items:center;gap:6px;
+    font-family:"Noto Sans TC",sans-serif;
+    color:#0df2ff;font-size:13px;font-weight:600;
+    margin-top:10px;
+    opacity:0.85;
+    transition:opacity 0.2s;
+  }
+  .case:hover .more{opacity:1}
+  .case .more .tri{
+    width:0;height:0;
+    border-top:5px solid transparent;
+    border-bottom:5px solid transparent;
+    border-left:8px solid #0df2ff;
+  }
+  .case-tag{display:none}
+
+  /* ───── FOOTER / BOTTOM CTA ───── */
+  .foot-cta{
+    position:relative;z-index:3;
+    padding:60px 32px 120px;
+    text-align:center;
+    max-width:1200px;
+    margin:0 auto;
+  }
+  .foot-cta .btn-cta{margin-top:0}
+
+  /* NAV */
+  .topnav{
+    position:sticky;top:0;z-index:50;
+    background:#fff;
+    border-bottom:1px solid rgba(0,0,0,0.1);
+    box-shadow:0 2px 12px rgba(0,0,0,0.08);
+  }
+  .topnav-inner{
+    width:1200px;margin:0 auto;
+    padding:12px 32px;
+    display:flex;align-items:center;gap:32px;
+  }
+  .logo{
+    display:flex;align-items:center;flex-shrink:0;
+  }
+  .logo img{height:42px;width:auto;display:block}
+  .topnav-links{
+    display:flex;gap:8px;margin-left:8px;
+    font-family:"Noto Sans TC",sans-serif;font-size:14px;
+  }
+  .topnav-links a{
+    position:relative;
+    color:rgba(0,0,0,0.65);
+    text-decoration:none;
+    padding:6px 14px;
+    transition:color 0.35s ease;
+  }
+  .topnav-links a::after{
+    content:"";
+    position:absolute;left:14px;bottom:2px;
+    height:2px;width:calc(100% - 28px);
+    background:linear-gradient(90deg,#0099bb,#00cdf2);
+    transform:scaleX(0);transform-origin:left;
+    transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);
+    border-radius:2px;
+  }
+  .topnav-links a:hover{color:#000}
+  .topnav-links a:hover::after{transform:scaleX(1)}
+
+  /* footer strip */
+  .foot-bar{
+    background:#000;padding:28px 32px;width:100%;
+    font-family:"Noto Sans TC",sans-serif;font-size:13px;color:rgba(255,255,255,0.55);
+    letter-spacing:0.08em;
+    display:flex;justify-content:space-between;align-items:center;
+    box-sizing:border-box;
+  }
+  .foot-bar-inner{
+    width:100%;max-width:1200px;margin:0 auto;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+</style>
+</head>
+<body data-cc-id="cc-1" style="cursor: crosshair;">
+
+<div class="page">
+
+  <!-- NAV -->
+  <nav class="topnav">
+    <div class="topnav-inner">
+      <div class="logo">
+        <img src="assets/asuslogo_long_bk.png.png" alt="ASUS IoT">
+      </div>
+      <div class="topnav-links">
+        <a href="#pain">產業痛點</a>
+        <a href="#solution">解決方案</a>
+        <a href="#cases">成功案例</a>
+        <a href="#contact">聯絡我們</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-inner">
+      <div class="hero-kicker">產業全方位 AI 智慧強化加速計畫</div>
+      <h1 class="hero-title"><span class="allin"><span class="ai-hi">Al</span>l in ASUS！</span>自動化到智動化</h1>
+
+      <a href="#contact" class="btn-cta" aria-label="立即免費線上檢測">
+        <span class="play">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M2 1.5L14 8 2 14.5V1.5z" fill="#000"></path></svg>
+        </span>
+        <span class="ctx">立即免費線上檢測</span>
+      </a>
+
+      <div class="hero-subtitle-row">
+        <div class="s1">AI 賦能：產業躍升與 AI 智慧轉型關鍵評估</div>
+        <div class="s2">華碩全方位智進 AI<span class="divider">｜</span>免費智慧健檢服務</div>
+      </div>
+
+      <div class="pill-wrap">
+<div class="pill-bar">
+          <div class="pill-half">
+            <div class="t1">由專家提供<span class="hl">免費</span></div>
+            <div class="t2">【智慧轉型產業升級報告書】</div>
+          </div>
+          <div class="pill-half">
+            <div class="t1">預約前<span class="hl-num">30</span>名再享</div>
+            <div class="t2">【ASUS 智進 AI 早鳥優惠方案】</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GRADIENT BG REGION -->
+  <section class="grad">
+
+    <!-- PAIN POINTS -->
+    <div class="pain-wrap" id="pain">
+      <div class="pain-title-bg"></div>
+      <div class="pain-heading">企業智進 AI 的隱形瓶頸：破解核心痛點</div>
+      <div class="pain-subtitle">業界領域痛點分析</div>
+
+      <div class="inds">
+        <!-- 智慧醫療 -->
+        <div class="ind-wrap anim-ready delay-1">
+          <div class="ind">
+            <div class="ind-head">
+              <img class="ico" src="assets/ico-heart.png" alt="">
+              <div class="t">智慧醫療</div>
+            </div>
+            <div class="ind-body">
+              <div class="ind-diagram">
+                <svg viewBox="0 0 168 140" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <radialGradient id="g1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#0df2ff" stop-opacity="0.35"></stop><stop offset="100%" stop-color="#0df2ff" stop-opacity="0"></stop></radialGradient>
+                  </defs>
+                  <polygon points="84,20 140,55 120,115 48,115 28,55" fill="url(#g1)" stroke="#0df2ff" stroke-width="1" opacity="0.9"></polygon>
+                  <polygon points="84,40 120,62 108,100 60,100 48,62" fill="none" stroke="#7aeef5" stroke-width="0.7" opacity="0.6"></polygon>
+                  <circle cx="84" cy="20" r="3" fill="#0df2ff"></circle><circle cx="140" cy="55" r="3" fill="#0df2ff"></circle>
+                  <circle cx="120" cy="115" r="3" fill="#0df2ff"></circle><circle cx="48" cy="115" r="3" fill="#0df2ff"></circle>
+                  <circle cx="28" cy="55" r="3" fill="#0df2ff"></circle>
+                  <text x="84" y="13" fill="#fff" font-size="7" text-anchor="middle" font-family="Inter">大數據/AI</text>
+                  <text x="146" y="57" fill="#fff" font-size="7" font-family="Inter">邊緣</text>
+                  <text x="120" y="128" fill="#fff" font-size="7" text-anchor="middle" font-family="Inter">資安</text>
+                  <text x="48" y="128" fill="#fff" font-size="7" text-anchor="middle" font-family="Inter">整合</text>
+                  <text x="22" y="57" fill="#fff" font-size="7" text-anchor="end" font-family="Inter">成本</text>
+                </svg>
+              </div>
+              <div class="ind-points">
+                <span>• 大數據處理與AI模型開發挑戰</span>
+                <span>• 邊緣運算與即時性需求</span>
+                <span>• 資料安全、隱私保護與法規遵循</span>
+                <span>• 整合與相容性複雜度</span>
+                <span>• 成本、擴展性與長期供貨考量</span>
+              </div>
+            </div>
+          </div>
+          <div class="ind-cta">
+            <div class="round"><svg viewBox="0 0 16 16"><path d="M1 8h12M9 4l4 4-4 4" stroke="#000" stroke-width="1.8" fill="none"></path></svg></div>
+            <div class="lbl">深入剖析及對策建議</div>
+          </div>
+        </div>
+
+        <!-- 智慧城市 -->
+        <div class="ind-wrap anim-ready delay-2">
+          <div class="ind">
+            <div class="ind-head">
+              <img class="ico" src="assets/ico-building.png" alt="">
+              <div class="t">智慧城市</div>
+            </div>
+            <div class="ind-body">
+              <div class="ind-diagram">
+                <svg viewBox="0 0 168 140" xmlns="http://www.w3.org/2000/svg">
+                  <polygon points="84,20 140,55 120,115 48,115 28,55" fill="url(#g1)" stroke="#0df2ff" stroke-width="1" opacity="0.9"></polygon>
+                  <polygon points="84,45 115,65 105,98 63,98 53,65" fill="none" stroke="#7aeef5" stroke-width="0.7" opacity="0.6"></polygon>
+                  <circle cx="84" cy="20" r="3" fill="#0df2ff"></circle><circle cx="140" cy="55" r="3" fill="#0df2ff"></circle>
+                  <circle cx="120" cy="115" r="3" fill="#0df2ff"></circle><circle cx="48" cy="115" r="3" fill="#0df2ff"></circle>
+                  <circle cx="28" cy="55" r="3" fill="#0df2ff"></circle>
+                  <text x="84" y="13" fill="#fff" font-size="7" text-anchor="middle" font-family="Inter">部署管理</text>
+                  <text x="146" y="57" fill="#fff" font-size="7" font-family="Inter">惡劣環境</text>
+                  <text x="120" y="128" fill="#fff" font-size="7" text-anchor="middle" font-family="Inter">數據整合</text>
+                  <text x="48" y="128" fill="#fff" font-size="7" text-anchor="middle" font-family="Inter">TCO</text>
+                  <text x="22" y="57" fill="#fff" font-size="7" text-anchor="end" font-family="Inter">商業洞察</text>
+                </svg>
+              </div>
+              <div class="ind-points">
+                <span>• 商業洞察與決策效率不足</span>
+                <span>• 惡劣環境適應性與穩定性</span>
+                <span>• 數據整合與AI模型客製難度</span>
+                <span>• 總體擁有成本 (TCO) 壓力</span>
+              </div>
+            </div>
+          </div>
+          <div class="ind-cta">
+            <div class="round"><svg viewBox="0 0 16 16"><path d="M1 8h12M9 4l4 4-4 4" stroke="#000" stroke-width="1.8" fill="none"></path></svg></div>
+            <div class="lbl">深入剖析及對策建議</div>
+          </div>
+        </div>
+
+        <!-- 智慧製造 -->
+        <div class="ind-wrap anim-ready delay-3">
+          <div class="ind">
+            <div class="ind-head">
+              <img class="ico" src="assets/ico-gear.png" alt="">
+              <div class="t">智慧製造</div>
+            </div>
+            <div class="ind-body">
+              <div class="ind-diagram">
+                <svg viewBox="0 0 168 140" xmlns="http://www.w3.org/2000/svg">
+                  <polygon points="84,20 140,55 120,115 48,115 28,55" fill="url(#g1)" stroke="#0df2ff" stroke-width="1" opacity="0.9"></polygon>
+                  <polygon points="84,35 125,60 110,105 58,105 43,60" fill="none" stroke="#7aeef5" stroke-width="0.7" opacity="0.6"></polygon>
+                  <circle cx="84" cy="20" r="3" fill="#0df2ff"></circle><circle cx="140" cy="55" r="3" fill="#0df2ff"></circle>
+                  <circle cx="120" cy="115" r="3" fill="#0df2ff"></circle><circle cx="48" cy="115" r="3" fill="#0df2ff"></circle>
+                  <circle cx="28" cy="55" r="3" fill="#0df2ff"></circle>
+                  <text x="84" y="13" fill="#fff" font-size="7" text-anchor="middle" font-family="Inter">嚴苛環境</text>
+                  <text x="146" y="57" fill="#fff" font-size="7" font-family="Inter">OT/IT</text>
+                  <text x="120" y="128" fill="#fff" font-size="7" text-anchor="middle" font-family="Inter">巨量數據</text>
+                  <text x="48" y="128" fill="#fff" font-size="7" text-anchor="middle" font-family="Inter">長期供貨</text>
+                  <text x="22" y="57" fill="#fff" font-size="7" text-anchor="end" font-family="Inter">智慧轉型</text>
+                </svg>
+              </div>
+              <div class="ind-points">
+                <span>• 智慧化轉型初期投資高與複雜度</span>
+                <span>• OT/IT整合困難、AI模型開發部署</span>
+                <span>• 巨量數據處理、邊緣運算瓶頸</span>
+                <span>• 長期穩定供貨、維護與資安風險</span>
+              </div>
+            </div>
+          </div>
+          <div class="ind-cta">
+            <div class="round"><svg viewBox="0 0 16 16"><path d="M1 8h12M9 4l4 4-4 4" stroke="#000" stroke-width="1.8" fill="none"></path></svg></div>
+            <div class="lbl">深入剖析及對策建議</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-sep"></div>
+
+    <!-- ORB / EXCLUSIVE -->
+    <div class="orb-sec" id="solution">
+      <div class="orb-crown"></div>
+      <div class="exclusive">獨家</div>
+      <div class="allin-big allin-grad">All in ASUS</div>
+      <div class="allin-big" style="margin-top:6px">全方位AI智慧轉型</div>
+
+      <div class="ellipse-bg"></div>
+      <div class="orb"></div>
+      <!-- 方案特色文字與卡片已隱藏，只顯示球體圖片 -->
+      <div class="orb-mask-label" style="display:none">方案特色</div>
+
+      <div class="orb-features" style="display:none">
+        <div class="of"><span class="n">01 · EDGE</span><h4>工規邊緣硬體</h4><p>-40°C~70°C 寬溫、IP65 防護、7 年長期供貨</p></div>
+        <div class="of"><span class="n">02 · MODEL</span><h4>客製 AI 模型</h4><p>視覺、聲學、時序三大家族，14 天完成 fine‑tune</p></div>
+        <div class="of"><span class="n">03 · CLOUD</span><h4>雲端維運平台</h4><p>OTA、版本、日誌、告警、合規稽核一站管理</p></div>
+        <div class="of" data-cc-id="cc-3"><span class="n">04 · SERVICE</span><h4>端到端顧問</h4><p>90 天 POC 承諾，配置 SA 與資料科學團隊</p></div>
+      </div>
+    </div>
+
+    <!-- CASES -->
+    <div class="cases" id="cases">
+      <div class="cases-crown" data-cc-id="cc-4" style="opacity: 1;"></div>
+      <div class="cases-title">成功案例 客戶證言</div>
+
+      <div class="case-tracks">
+      <!-- 上排：左至右 -->
+      <div class="case-track track-ltr">
+        <div class="case-list">
+          <div class="case"><div class="pic" style="background-image:url(assets/case-robot.jpg)"></div><div class="body"><div><span class="tag">智慧製造</span><div class="ctitle">靈活機器人解決方案</div><div class="cat">電子商務倉庫的彈性自動化搬運系統</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" style="background-image:url(assets/case-tea.jpg)"></div><div class="body"><div><span class="tag">智慧零售</span><div class="ctitle">AI 視覺檢測應用</div><div class="cat">華碩 AI 視覺助力所長茶葉蛋品質管控</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" style="background-image:url(assets/case-parking.jpg)"></div><div class="body"><div><span class="tag">智慧城市</span><div class="ctitle">智慧停車環境改造</div><div class="cat">EPS Global 軟硬整合打造城市停車解決方案</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" style="background-image:url(assets/case-retail.png)"></div><div class="body"><div><span class="tag">智慧零售</span><div class="ctitle">視覺分析 ROI 提升</div><div class="cat">meldCX® 視覺分析賦能，大幅提升零售投資報酬率</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <!-- 複製一份實現無縫循環 -->
+          <div class="case"><div class="pic" style="background-image:url(assets/case-robot.jpg)"></div><div class="body"><div><span class="tag">智慧製造</span><div class="ctitle">靈活機器人解決方案</div><div class="cat">電子商務倉庫的彈性自動化搬運系統</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" style="background-image:url(assets/case-tea.jpg)"></div><div class="body"><div><span class="tag">智慧零售</span><div class="ctitle">AI 視覺檢測應用</div><div class="cat">華碩 AI 視覺助力所長茶葉蛋品質管控</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" style="background-image:url(assets/case-parking.jpg)"></div><div class="body"><div><span class="tag">智慧城市</span><div class="ctitle">智慧停車環境改造</div><div class="cat">EPS Global 軟硬整合打造城市停車解決方案</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" style="background-image:url(assets/case-retail.png)"></div><div class="body"><div><span class="tag">智慧零售</span><div class="ctitle">視覺分析 ROI 提升</div><div class="cat">meldCX® 視覺分析賦能，大幅提升零售投資報酬率</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+        </div>
+      </div>
+      <!-- 下排：右至左 -->
+      <div class="case-track track-rtl">
+        <div class="case-list">
+          <div class="case"><div class="pic" style="background-image:url(assets/case-hospital.png)"></div><div class="body"><div><span class="tag">智慧醫療</span><div class="ctitle">醫院自助資訊站</div><div class="cat">智慧邊緣電腦推動智慧醫院自助服務體驗</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" style="background-image:url(assets/case-5g.png)"></div><div class="body"><div><span class="tag">智慧城市</span><div class="ctitle">5G 智慧杆邊緣運算</div><div class="cat">PE400D 強化台北市 5G 智慧杆實力</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" style="background-image:url(assets/case-xray.png)"></div><div class="body"><div><span class="tag">智慧醫療</span><div class="ctitle">數位放射攝影效能</div><div class="cat">ASUS IoT 為放射攝影設備提供穩定強大算力</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" style="background-image:url(assets/case-nvidia.jpg)"></div><div class="body"><div><span class="tag">智慧教育</span><div class="ctitle">AI 基礎建設合作</div><div class="cat">華碩與興大以 NVIDIA 方案建置先進 AI 研究環境</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <!-- 複製一份實現無縫循環 -->
+          <div class="case"><div class="pic" style="background-image:url(assets/case-hospital.png)"></div><div class="body"><div><span class="tag">智慧醫療</span><div class="ctitle">醫院自助資訊站</div><div class="cat">智慧邊緣電腦推動智慧醫院自助服務體驗</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" style="background-image:url(assets/case-5g.png)"></div><div class="body"><div><span class="tag">智慧城市</span><div class="ctitle">5G 智慧杆邊緣運算</div><div class="cat">PE400D 強化台北市 5G 智慧杆實力</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" style="background-image:url(assets/case-xray.png)"></div><div class="body"><div><span class="tag">智慧醫療</span><div class="ctitle">數位放射攝影效能</div><div class="cat">ASUS IoT 為放射攝影設備提供穩定強大算力</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" style="background-image:url(assets/case-nvidia.jpg)"></div><div class="body"><div><span class="tag">智慧教育</span><div class="ctitle">AI 基礎建設合作</div><div class="cat">華碩與興大以 NVIDIA 方案建置先進 AI 研究環境</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+        </div>
+      </div>
+      </div><!-- /.case-tracks -->
+    </div>
+
+    <!-- FOOTER CTA -->
+    <div class="foot-cta" id="contact">
+      <a href="#" class="btn-cta">
+        <span class="play">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M2 1.5L14 8 2 14.5V1.5z" fill="#000"></path></svg>
+        </span>
+        <span class="ctx">立即免費線上檢測</span>
+      </a>
+    </div>
+  </section>
+
+  <div class="foot-bar">
+    <div class="foot-bar-inner">
+      <div>© 2026 ASUS IoT · ALL RIGHTS RESERVED</div>
+      <div>PRIVACY · TERMS · CONTACT</div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+/* scroll 淡入動畫 */
+(function(){
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  },{threshold:0.12});
+  document.querySelectorAll('.anim-ready').forEach(function(el){ io.observe(el); });
+})();
+
+/* 平滑滾動錨點 */
+document.querySelectorAll('.topnav-links a[href^="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    var id = this.getAttribute('href').slice(1);
+    var el = document.getElementById(id);
+    if(!el) return;
+    e.preventDefault();
+    el.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+
+/* 頁面縮放 */
+(function(){
+  var page = document.querySelector('.page');
+  function fit(){
+    var vw = window.innerWidth;
+    if(vw < 1200){
+      var s = vw / 1200;
+      page.style.width = '1200px';
+      page.style.transform = 'scale(' + s + ')';
+      page.style.transformOrigin = 'top left';
+      document.body.style.height = Math.ceil(page.scrollHeight * s) + 'px';
+    } else {
+      page.style.width = '100%';
+      page.style.transform = '';
+      page.style.transformOrigin = '';
+      document.body.style.height = '';
+    }
+  }
+  window.addEventListener('resize', fit);
+  fit();
+})();
+</script>
+</body></html>
