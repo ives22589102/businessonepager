@@ -6,7 +6,8 @@
 <title>All in ASUS! 自動化到智慧動化</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Noto+Sans+TC:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&amp;family=Noto+Sans+TC:wght@400;500;700;800&amp;display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/hero-bg.jpg" fetchpriority="high">
 <template id="__bundler_thumbnail" data-bg-color="#003b46">
   <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
     <defs>
@@ -261,7 +262,7 @@
   .pain-title-bg{
     position:absolute;left:0;top:0;
     width:1111px;height:231px;
-    background:url(assets/pain-title-bg.png) left top / contain no-repeat;
+    background-position:left top;background-size:contain;background-repeat:no-repeat;
     opacity:0.9;
     pointer-events:none;
   }
@@ -463,7 +464,7 @@
     position:absolute;
     left:-214px;top:200px;
     width:1618px;height:1117px;
-    background:url(assets/sphere-bg.png) center / contain no-repeat;
+    background-position:center;background-size:contain;background-repeat:no-repeat;
     z-index:1;
     pointer-events:none;
     animation:floatY 7s ease-in-out infinite;
@@ -735,7 +736,7 @@
 
     <!-- PAIN POINTS -->
     <div class="pain-wrap" id="pain">
-      <div class="pain-title-bg"></div>
+      <div class="pain-title-bg" data-bg="assets/pain-title-bg.png"></div>
       <div class="pain-heading">企業智進 AI 的隱形瓶頸：破解核心痛點</div>
       <div class="pain-subtitle">業界領域痛點分析</div>
 
@@ -864,7 +865,7 @@
       <div class="allin-big" style="margin-top:6px">全方位AI智慧轉型</div>
 
       <div class="ellipse-bg"></div>
-      <div class="orb"></div>
+      <div class="orb" data-bg="assets/sphere-bg.webp"></div>
       <!-- 方案特色文字與卡片已隱藏，只顯示球體圖片 -->
       <div class="orb-mask-label" style="display:none">方案特色</div>
 
@@ -885,29 +886,29 @@
       <!-- 上排：左至右 -->
       <div class="case-track track-ltr">
         <div class="case-list">
-          <div class="case"><div class="pic" style="background-image:url(assets/case-robot.jpg)"></div><div class="body"><div><span class="tag">智慧製造</span><div class="ctitle">靈活機器人解決方案</div><div class="cat">電子商務倉庫的彈性自動化搬運系統</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
-          <div class="case"><div class="pic" style="background-image:url(assets/case-tea.jpg)"></div><div class="body"><div><span class="tag">智慧零售</span><div class="ctitle">AI 視覺檢測應用</div><div class="cat">華碩 AI 視覺助力所長茶葉蛋品質管控</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
-          <div class="case"><div class="pic" style="background-image:url(assets/case-parking.jpg)"></div><div class="body"><div><span class="tag">智慧城市</span><div class="ctitle">智慧停車環境改造</div><div class="cat">EPS Global 軟硬整合打造城市停車解決方案</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
-          <div class="case"><div class="pic" style="background-image:url(assets/case-retail.png)"></div><div class="body"><div><span class="tag">智慧零售</span><div class="ctitle">視覺分析 ROI 提升</div><div class="cat">meldCX® 視覺分析賦能，大幅提升零售投資報酬率</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" data-bg="assets/case-robot.webp"></div><div class="body"><div><span class="tag">智慧製造</span><div class="ctitle">靈活機器人解決方案</div><div class="cat">電子商務倉庫的彈性自動化搬運系統</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" data-bg="assets/case-tea.webp"></div><div class="body"><div><span class="tag">智慧零售</span><div class="ctitle">AI 視覺檢測應用</div><div class="cat">華碩 AI 視覺助力所長茶葉蛋品質管控</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" data-bg="assets/case-parking.webp"></div><div class="body"><div><span class="tag">智慧城市</span><div class="ctitle">智慧停車環境改造</div><div class="cat">EPS Global 軟硬整合打造城市停車解決方案</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" data-bg="assets/case-retail.webp"></div><div class="body"><div><span class="tag">智慧零售</span><div class="ctitle">視覺分析 ROI 提升</div><div class="cat">meldCX® 視覺分析賦能，大幅提升零售投資報酬率</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
           <!-- 複製一份實現無縫循環 -->
-          <div class="case"><div class="pic" style="background-image:url(assets/case-robot.jpg)"></div><div class="body"><div><span class="tag">智慧製造</span><div class="ctitle">靈活機器人解決方案</div><div class="cat">電子商務倉庫的彈性自動化搬運系統</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
-          <div class="case"><div class="pic" style="background-image:url(assets/case-tea.jpg)"></div><div class="body"><div><span class="tag">智慧零售</span><div class="ctitle">AI 視覺檢測應用</div><div class="cat">華碩 AI 視覺助力所長茶葉蛋品質管控</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
-          <div class="case"><div class="pic" style="background-image:url(assets/case-parking.jpg)"></div><div class="body"><div><span class="tag">智慧城市</span><div class="ctitle">智慧停車環境改造</div><div class="cat">EPS Global 軟硬整合打造城市停車解決方案</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
-          <div class="case"><div class="pic" style="background-image:url(assets/case-retail.png)"></div><div class="body"><div><span class="tag">智慧零售</span><div class="ctitle">視覺分析 ROI 提升</div><div class="cat">meldCX® 視覺分析賦能，大幅提升零售投資報酬率</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" data-bg="assets/case-robot.webp"></div><div class="body"><div><span class="tag">智慧製造</span><div class="ctitle">靈活機器人解決方案</div><div class="cat">電子商務倉庫的彈性自動化搬運系統</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" data-bg="assets/case-tea.webp"></div><div class="body"><div><span class="tag">智慧零售</span><div class="ctitle">AI 視覺檢測應用</div><div class="cat">華碩 AI 視覺助力所長茶葉蛋品質管控</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" data-bg="assets/case-parking.webp"></div><div class="body"><div><span class="tag">智慧城市</span><div class="ctitle">智慧停車環境改造</div><div class="cat">EPS Global 軟硬整合打造城市停車解決方案</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" data-bg="assets/case-retail.webp"></div><div class="body"><div><span class="tag">智慧零售</span><div class="ctitle">視覺分析 ROI 提升</div><div class="cat">meldCX® 視覺分析賦能，大幅提升零售投資報酬率</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
         </div>
       </div>
       <!-- 下排：右至左 -->
       <div class="case-track track-rtl">
         <div class="case-list">
-          <div class="case"><div class="pic" style="background-image:url(assets/case-hospital.png)"></div><div class="body"><div><span class="tag">智慧醫療</span><div class="ctitle">醫院自助資訊站</div><div class="cat">智慧邊緣電腦推動智慧醫院自助服務體驗</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
-          <div class="case"><div class="pic" style="background-image:url(assets/case-5g.png)"></div><div class="body"><div><span class="tag">智慧城市</span><div class="ctitle">5G 智慧杆邊緣運算</div><div class="cat">PE400D 強化台北市 5G 智慧杆實力</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
-          <div class="case"><div class="pic" style="background-image:url(assets/case-xray.png)"></div><div class="body"><div><span class="tag">智慧醫療</span><div class="ctitle">數位放射攝影效能</div><div class="cat">ASUS IoT 為放射攝影設備提供穩定強大算力</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
-          <div class="case"><div class="pic" style="background-image:url(assets/case-nvidia.jpg)"></div><div class="body"><div><span class="tag">智慧教育</span><div class="ctitle">AI 基礎建設合作</div><div class="cat">華碩與興大以 NVIDIA 方案建置先進 AI 研究環境</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" data-bg="assets/case-hospital.webp"></div><div class="body"><div><span class="tag">智慧醫療</span><div class="ctitle">醫院自助資訊站</div><div class="cat">智慧邊緣電腦推動智慧醫院自助服務體驗</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" data-bg="assets/case-5g.webp"></div><div class="body"><div><span class="tag">智慧城市</span><div class="ctitle">5G 智慧杆邊緣運算</div><div class="cat">PE400D 強化台北市 5G 智慧杆實力</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" data-bg="assets/case-xray.webp"></div><div class="body"><div><span class="tag">智慧醫療</span><div class="ctitle">數位放射攝影效能</div><div class="cat">ASUS IoT 為放射攝影設備提供穩定強大算力</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" data-bg="assets/case-nvidia.jpg"></div><div class="body"><div><span class="tag">智慧教育</span><div class="ctitle">AI 基礎建設合作</div><div class="cat">華碩與興大以 NVIDIA 方案建置先進 AI 研究環境</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
           <!-- 複製一份實現無縫循環 -->
-          <div class="case"><div class="pic" style="background-image:url(assets/case-hospital.png)"></div><div class="body"><div><span class="tag">智慧醫療</span><div class="ctitle">醫院自助資訊站</div><div class="cat">智慧邊緣電腦推動智慧醫院自助服務體驗</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
-          <div class="case"><div class="pic" style="background-image:url(assets/case-5g.png)"></div><div class="body"><div><span class="tag">智慧城市</span><div class="ctitle">5G 智慧杆邊緣運算</div><div class="cat">PE400D 強化台北市 5G 智慧杆實力</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
-          <div class="case"><div class="pic" style="background-image:url(assets/case-xray.png)"></div><div class="body"><div><span class="tag">智慧醫療</span><div class="ctitle">數位放射攝影效能</div><div class="cat">ASUS IoT 為放射攝影設備提供穩定強大算力</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
-          <div class="case"><div class="pic" style="background-image:url(assets/case-nvidia.jpg)"></div><div class="body"><div><span class="tag">智慧教育</span><div class="ctitle">AI 基礎建設合作</div><div class="cat">華碩與興大以 NVIDIA 方案建置先進 AI 研究環境</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" data-bg="assets/case-hospital.webp"></div><div class="body"><div><span class="tag">智慧醫療</span><div class="ctitle">醫院自助資訊站</div><div class="cat">智慧邊緣電腦推動智慧醫院自助服務體驗</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" data-bg="assets/case-5g.webp"></div><div class="body"><div><span class="tag">智慧城市</span><div class="ctitle">5G 智慧杆邊緣運算</div><div class="cat">PE400D 強化台北市 5G 智慧杆實力</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" data-bg="assets/case-xray.webp"></div><div class="body"><div><span class="tag">智慧醫療</span><div class="ctitle">數位放射攝影效能</div><div class="cat">ASUS IoT 為放射攝影設備提供穩定強大算力</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
+          <div class="case"><div class="pic" data-bg="assets/case-nvidia.jpg"></div><div class="body"><div><span class="tag">智慧教育</span><div class="ctitle">AI 基礎建設合作</div><div class="cat">華碩與興大以 NVIDIA 方案建置先進 AI 研究環境</div></div><div class="more"><span class="tri"></span>查看更多</div></div></div>
         </div>
       </div>
       </div><!-- /.case-tracks -->
@@ -935,14 +936,27 @@
 
 
 <script>
-/* scroll 淡入動畫 */
+/* scroll 淡入動畫 + lazy-load background images */
 (function(){
   var io = new IntersectionObserver(function(entries){
     entries.forEach(function(e){
-      if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
     });
   },{threshold:0.12});
   document.querySelectorAll('.anim-ready').forEach(function(el){ io.observe(el); });
+
+  var bgIo = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.style.backgroundImage = 'url(' + e.target.dataset.bg + ')';
+        bgIo.unobserve(e.target);
+      }
+    });
+  },{rootMargin:'200px'});
+  document.querySelectorAll('[data-bg]').forEach(function(el){ bgIo.observe(el); });
 })();
 
 /* 平滑滾動錨點 */
