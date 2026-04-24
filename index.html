@@ -1007,13 +1007,39 @@
     .ind-row{ flex-direction:column; }
     .ind-wrap.expanded{ flex:unset;height:auto; }
     .ind-wrap.expanded .ind{ flex:none;border-radius:8px 8px 0 0; }
+    
+    /* 手機：展開時，其他卡片不要消失 */
+    .inds.has-expanded .ind-wrap:not(.expanded){
+      flex:1; height:auto; opacity:1; overflow:visible; pointer-events:auto; margin:0;
+    }
     /* 手機：ind-detail 往下展開（覆蓋桌面的 display:none） */
-    .ind-detail{ display:block;max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.3s ease; }
-    .ind-wrap.expanded .ind-detail{ max-height:3000px;border-left:none;border-top:1px solid rgba(0,0,0,0.07);border-radius:0 0 8px 8px;padding:18px 16px; }
+    .ind-detail{ 
+      display:block;
+      max-height:0;
+      overflow:hidden;
+      background-color: #fff; /* 新增這行：預設填上白底 */
+      border-radius: 0 0 8px 8px; /* 新增這行：確保收合過程的圓角平順 */
+      transition:max-height 0.4s ease,padding 0.3s ease; 
+    }
+    .ind-wrap.expanded .ind-detail{ 
+      max-height:3000px;
+      border-left:none;
+      border-top:1px solid rgba(0,0,0,0.07);
+      border-radius:0 0 8px 8px;
+      padding:18px 16px; 
+      background-color: #fff; /* 新增這行：展開時確保有白底 */
+    }
+
+    /* 手機：還原展開時雷達圖與標題的顯示 */
     .ind-wrap.expanded .ind-cta{ display:flex; }
-    .ind-wrap.expanded .ind > .ind-head,
+    .ind-wrap.expanded .ind > .ind-head{ display:block; }
     .ind-wrap.expanded .ind > .ind-body,
-    .ind-wrap.expanded .ind-points{ display:block; }
+    .ind-wrap.expanded .ind-points{ display:flex; }
+
+    /* 新增此段：隱藏桌面版 JS 動態產生的迷你選單，防止手機版出現重複雷達圖（跑版） */
+    .ind-mini-list {
+      display: none !important;
+    }
 
     /* ── SECTION SEP ── */
     .section-sep{ margin:36px auto 0 }
@@ -1458,6 +1484,9 @@
       flex:0 0 56px;flex-direction:row;
       justify-content:flex-start;align-items:center;
       padding:0 16px;gap:12px;width:auto;
+    }
+    .sol-spine-dots{
+      top:50%;left:auto;right:16px;transform:translateY(-50%);
     }
     .sol-spine-hint{ display:none }
     .sol-spine-label{ writing-mode:horizontal-tb;font-size:18px }
