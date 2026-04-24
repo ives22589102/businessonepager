@@ -342,9 +342,10 @@
   }
   /* 展開時：左側 mini-list 欄（260px固定），右側共用面板 flex:1 */
   .ind-wrap.expanded{ flex:0 0 260px;height:68vh; }
-  .ind-wrap.expanded .ind-row{ flex:1; }
+  .ind-wrap.expanded .ind-row{ flex:1; min-height:0; height:100%; }
   .ind-wrap.expanded .ind{
     flex:0 0 260px;border-radius:8px 0 0 8px;padding:0;
+    height:100%;
   }
   .ind-wrap.expanded .ind > .ind-head,
   .ind-wrap.expanded .ind > .ind-body,
@@ -2464,26 +2465,16 @@ document.querySelectorAll('.topnav-links a[href^="#"]').forEach(function(a){
     });
   }
 
-  /* ── 桌面：切換（crossfade，不 collapse） ── */
+  /* ── 桌面：切換（crossfade，不移動 DOM、不 toggle expanded） ── */
   function desktopSwitch(newWrap){
     var idx = wraps.indexOf(newWrap);
-    var curWrap = null;
-    wraps.forEach(function(w){ if(w.classList.contains('expanded')) curWrap=w; });
-    if(!curWrap) return;
-    if(curWrap===newWrap){ showSection(wraps.indexOf(newWrap)); return; }
-
-    /* 更新 mini-list active 與位置 */
+    /* 只更新 mini-list 的 active 樣式，不碰 expanded class 也不移動節點 */
     var list = inds.querySelector('.ind-mini-list');
     if(list){
       list.querySelectorAll('.ind-mini').forEach(function(item,i){
         item.classList.toggle('active', wraps[i]===newWrap);
       });
-      var newInd = newWrap.querySelector('.ind');
-      if(newInd && list.parentNode!==newInd) newInd.appendChild(list);
     }
-    curWrap.classList.remove('expanded');
-    newWrap.classList.add('expanded');
-
     /* Crossfade 右側內文 */
     showSection(idx);
   }
