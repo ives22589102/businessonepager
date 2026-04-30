@@ -1125,6 +1125,13 @@
     width:100%;max-width:1200px;margin:0 auto;
     display:flex;justify-content:space-between;align-items:center;
   }
+  .foot-bar a{
+    color:rgba(255,255,255,0.62);
+    text-decoration:none;
+    transition:color 0.2s ease;
+  }
+  .foot-bar a:hover{ color:#0df2ff; }
+  .foot-bar span{ margin:0 10px;color:rgba(255,255,255,0.35); }
 
   /* ═══════════════════════════════════════
      手機版 RWD  ( ≤ 767px )
@@ -1289,11 +1296,13 @@
       overflow:hidden;
       background-color: #fff; /* 新增這行：預設填上白底 */
       border-radius: 0 0 8px 8px; /* 新增這行：確保收合過程的圓角平順 */
-      transition:none; 
+      padding:0 16px;
+      border-top:0 solid rgba(0,0,0,0.07);
+      transition:max-height 0.48s cubic-bezier(0.22,1,0.36,1), padding 0.48s cubic-bezier(0.22,1,0.36,1), border-top-width 0.48s cubic-bezier(0.22,1,0.36,1); 
     }
     .ind-wrap.expanded .ind-detail{ 
-      max-height:none;
-      overflow:visible;
+      max-height:var(--mobile-detail-height, 1400px);
+      overflow:hidden;
       border-left:none;
       border-top:1px solid rgba(0,0,0,0.07);
       border-radius:0 0 8px 8px;
@@ -1715,6 +1724,8 @@
     padding:7px 8px 10px;text-align:center;
     border:none;border-radius:6px;
     letter-spacing:0.06em;white-space:normal;
+    overflow-wrap:anywhere;
+    word-break:break-word;
   }
   /* 表頭與 tbody 之間插入透明空白列，製造真實間距 */
   .sol-table tbody::before{
@@ -1756,6 +1767,13 @@
     background-repeat:no-repeat;
     color:#1a2530;
     white-space:normal;
+    overflow-wrap:anywhere;
+    word-break:break-word;
+  }
+  .sol-table td b,
+  .sol-table td a{
+    overflow-wrap:anywhere;
+    word-break:break-word;
   }
   /* 最後一列不顯示底部分隔線 */
   .sol-table tbody tr:last-child td{
@@ -1820,8 +1838,15 @@
       margin-bottom:8px;filter:brightness(1) !important;
       box-shadow:none !important;
     }
-    .sol-panel:not(.active) .sol-body{ display:none }
-    .sol-panel.active .sol-body{ display:flex;opacity:1;pointer-events:auto }
+    .sol-body{
+      display:flex;max-height:0;opacity:0;overflow:hidden;
+      pointer-events:none;
+      transition:max-height 0.52s cubic-bezier(0.22,1,0.36,1), opacity 0.28s ease;
+    }
+    .sol-panel.active .sol-body{
+      max-height:var(--mobile-sol-height, 1800px);
+      opacity:1;pointer-events:auto;
+    }
     .sol-spine{
       flex:0 0 56px;flex-direction:row;
       justify-content:center;align-items:center;
@@ -1838,6 +1863,14 @@
     .sol-cat-title{ font-size:26px;text-align:center }
     .sol-cat-en{ text-align:center }
     .sol-body-content{ padding:14px 20px 20px }
+    .sol-table{
+      border-spacing:3px 0;
+      font-size:10px;
+    }
+    .sol-table colgroup col:first-child{ width:54px }
+    .sol-table th{ padding:7px 5px 9px;font-size:11px;letter-spacing:0.02em }
+    .sol-table td{ padding:9px 6px;line-height:1.45 }
+    .tier-combo{ font-size:11px;line-height:1.25 }
   }
 
 </style>
@@ -2627,8 +2660,12 @@
 
   <div class="foot-bar">
     <div class="foot-bar-inner">
-      <div>© 2026 ASUS IoT · ALL RIGHTS RESERVED</div>
-      <div>PRIVACY · TERMS · CONTACT</div>
+      <div>©ASUSTeK Computer Inc. All rights reserved.</div>
+      <div>
+        <a href="https://www.asus.com/tw/terms_of_use_notice_privacy_policy/official-site/" target="_blank" rel="noopener">使用條款</a>
+        <span>·</span>
+        <a href="https://www.asus.com/tw/terms_of_use_notice_privacy_policy/privacy_policy/" target="_blank" rel="noopener">隱私權保護政策</a>
+      </div>
     </div>
   </div>
 </div>
@@ -2729,6 +2766,36 @@ document.querySelectorAll('.topnav-links a[href^="#"]').forEach(function(a){
   var OVERLAP = 24;  /* active card overlaps each tab by this amount */
   var currentIdx = 0;
 
+  function mobileOffset(){
+    var nav = document.querySelector('.topnav');
+    return (nav ? nav.offsetHeight : 0) + 10;
+  }
+
+  function scrollMobilePanelIntoView(panel, delay){
+    window.setTimeout(function(){
+      var top = panel.getBoundingClientRect().top + window.pageYOffset - mobileOffset();
+      window.scrollTo({top:Math.max(0, top), behavior:'smooth'});
+    }, delay || 0);
+  }
+
+  function settleMobilePanel(panel){
+    scrollMobilePanelIntoView(panel, 40);
+    scrollMobilePanelIntoView(panel, 560);
+  }
+
+  function setMobilePanelHeights(){
+    if(window.innerWidth >= 768) return;
+    panels.forEach(function(panel){
+      var body = panel.querySelector('.sol-body');
+      if(!body) return;
+      if(panel.classList.contains('active')){
+        body.style.setProperty('--mobile-sol-height', body.scrollHeight + 'px');
+      } else {
+        body.style.removeProperty('--mobile-sol-height');
+      }
+    });
+  }
+
   function layout(idx){
     if(window.innerWidth < 768) return;
     var total = accordion.offsetWidth;
@@ -2771,17 +2838,22 @@ document.querySelectorAll('.topnav-links a[href^="#"]').forEach(function(a){
         layout(idx);
       } else {
         currentIdx = idx;
-        panels.forEach(function(p,i){ p.classList.toggle('active', i===idx); });
+        panel.classList.add('active');
+        setMobilePanelHeights();
       }
     });
   });
 
   window.addEventListener('resize', function(){
     if(window.innerWidth >= 768) layout(currentIdx);
-    else panels.forEach(function(p){ p.style.left=''; p.style.width=''; p.style.zIndex=''; });
+    else {
+      panels.forEach(function(p){ p.style.left=''; p.style.width=''; p.style.zIndex=''; });
+      setMobilePanelHeights();
+    }
   });
 
   layout(0);
+  setMobilePanelHeights();
 })();
 
 /* 痛點分析 卡片展開 */
@@ -3038,11 +3110,38 @@ document.querySelectorAll('.topnav-links a[href^="#"]').forEach(function(a){
   }
 
   /* ── 手機：simple toggle（保留原有往下展開） ── */
+  function mobileOffset(){
+    var nav = document.querySelector('.topnav');
+    return (nav ? nav.offsetHeight : 0) + 10;
+  }
+
+  function setMobileDetailHeight(wrap){
+    var detail = wrap && wrap.querySelector('.ind-detail');
+    if(!detail) return;
+    detail.style.setProperty('--mobile-detail-height', (detail.scrollHeight + 48) + 'px');
+  }
+
+  function scrollMobileWrapIntoView(wrap, delay){
+    window.setTimeout(function(){
+      var top = wrap.getBoundingClientRect().top + window.pageYOffset - mobileOffset();
+      window.scrollTo({top:Math.max(0, top), behavior:'smooth'});
+    }, delay || 0);
+  }
+
+  function settleMobileWrap(wrap){
+    scrollMobileWrapIntoView(wrap, 40);
+    scrollMobileWrapIntoView(wrap, 520);
+  }
+
   function mobileToggle(wrap){
     var wasExpanded = wrap.classList.contains('expanded');
-    wraps.forEach(function(w){ w.classList.remove('expanded'); });
-    inds.classList.remove('has-expanded');
-    if(!wasExpanded){ wrap.classList.add('expanded'); inds.classList.add('has-expanded'); }
+    setMobileDetailHeight(wrap);
+    wrap.classList.toggle('expanded', !wasExpanded);
+    inds.classList.toggle('has-expanded', wraps.some(function(w){ return w.classList.contains('expanded'); }));
+    if(!wasExpanded){
+      setMobileDetailHeight(wrap);
+      requestAnimationFrame(function(){ setMobileDetailHeight(wrap); });
+    }
   }
 
   /* ── CTA 按鈕 ── */
